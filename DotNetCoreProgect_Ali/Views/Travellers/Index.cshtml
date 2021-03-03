@@ -1,0 +1,126 @@
+﻿@model IEnumerable<DotNetCoreProgect_Ali.Models.Traveller>
+
+    @{ ViewBag.Title = "Index"; }
+
+    <div class="row">
+        <div class="col-md-6" style="border:2px solid black; padding-left:10px">
+            <div id="travellerDiv">
+                <h2 style="text-align:center;">Traveller Informations</h2>
+                @foreach (var item in Model)
+                {
+                    <table class="table table-bordered table-hover table-striped" style="text-align:center;">
+                        <tr>
+                            <th>Traveller Name</th>
+
+                            <th>Action</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+
+                            </td>
+
+                            <td>
+                                <button class="btn btn-info" onclick="getDetails(@item.ID)">Details</button>&nbsp;&nbsp;
+                                <a asp-action="Delete" asp-route-id="@item.ID" class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    </table>
+
+
+                }
+                <p>
+                    <button type="button" class="btn btn-outline-secondary btn-lg" data-toggle="modal" data-target="#travellerModal">Traveller With Food Orders</button>
+                </p>
+            </div>
+
+        </div>
+
+        <div class="Col-md-12" style="border:2px solid black;">
+            <div id="ordersDiv">
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="travellerModal" tabindex="-1" aria-labelledby="travellerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                @{ Html.RenderPartialAsync("Create", new DotNetCoreProgect_Ali.Models.Traveller()); }
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+
+        <script>
+            $(document).ready(function () {
+                $("#travellerDiv").height($(window).height() * .80);
+                $("#ordersDiv").height($(window).height() * .70);
+
+                if (isNaN(@TempData["id"]) == false) {
+                    var link = '@Url.Action("TravellerOrder", "Travellers", new { id = @TempData["id"] })';
+                    $("#ordersDiv").load(link);
+                }
+
+                $('#travellerModal').on('shown.bs.modal', function () {
+                    $('#Name').trigger('focus');
+                });
+
+                $('#travellerModal').on('hidden.bs.modal', function (event) {
+                    $("input[type=text]").val("");
+                    $("input[type=number]").val("");
+                    $("input[type=datetime-local]").val("");
+                    $('#sl').val('0');
+
+
+
+                    $("div").each(function () {
+                        if (parseInt(this.id) > 0) {
+                            this.remove();
+                        }
+                    })
+                });
+
+                $('#addModelButton').on('click', function () {
+                    var present_sl = parseInt($('#sl').val());
+                    var next_sl = parseInt(present_sl) + 1;
+                    var next_item = '<div id="' + next_sl + '">' + $('#' + present_sl).html() + '</div>';
+                    next_item = next_item.split('_' + present_sl.toString()).join('_' + next_sl.toString());
+                    next_item = next_item.split('[' + present_sl.toString() + ']').join('[' + next_sl.toString() + ']');
+                    $('#' + present_sl).after(next_item);
+                    $('#sl').val(next_sl);
+                });
+
+                $('#orderModal').on('hidden.bs.modal', function (event) {
+                    $("input[type=text]").val("");
+                    $("input[type=number]").val("");
+                    $("input[type=datetime-local]").val("");
+                });
+            });
+
+
+            function getDetails(e) {
+                var link = '@Url.Action("TravellerOrder", "Travellers", new { id = "-1" })';
+                link = link.replace("-1", e);
+                $("#ordersDiv").load(link);
+            }
+
+            var loadImage = function (event) {
+                if (event.target.files && event.target.files[0]) {
+                    var img = document.getElementById('orderImage');
+                    img.src = URL.createObjectURL(event.target.files[0]);
+                }
+            }
+
+            var changeImage = function (obj, event) {
+                if (event.target.files && event.target.files[0]) {
+                    console.log(obj.dataset.tag);
+                    var img = document.getElementById(obj.dataset.tag);
+                    img.src = URL.createObjectURL(event.target.files[0]);
+                }
+            }
+
+        </script>
+    }
+

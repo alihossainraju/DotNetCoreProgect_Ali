@@ -1,0 +1,81 @@
+﻿@*@model IEnumerable<DotNetCoreProgect_Ali.Models.Food>*@
+@model PaginatedList<DotNetCoreProgect_Ali.Models.Food>
+
+@{ ViewData["Title"] = "Index"; }
+
+<h3 class="text-center text-uppercase">list of Foods</h3>
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+<p>
+    <a asp-action="Create" class="btn btn-primary rounded-0"><i class="fa fa-plus-circle"></i> Add New</a>
+</p>
+
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-action="Index">Back to Full List</a>
+        </p>
+    </div>
+</form>
+
+<table class="table table-bordered table-striped">
+    <thead>
+
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]"><b>Food Name</b></a>
+            </th>
+            <th>Quality</th>
+            <th>Quantity</th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]"><b>Purchase Date</b></a>
+            </th>
+            <th>Place</th>
+            <th>Image</th>
+
+            <th>Action(s)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>@item.FoodName</td>
+                <td>@item.Quality</td>
+                <td>@item.Quantity</td>
+                <td>@item.PurchasesDate.ToString("MM-dd-yyyy")</td>
+                <td>@item.Place</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">
+                        <img src="~/Uploads/@item.Image" class="img-thumbnail" height="100" width="100" asp-append-version="true" />
+                    </a>
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-info rounded-0"><i class="fa fa-pencil-alt"></i></a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger rounded-0"><i class="fa fa-trash-alt"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>
+

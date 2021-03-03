@@ -1,0 +1,69 @@
+﻿@model DotNetCoreProgect_Ali.Models.Traveller
+
+<form enctype="multipart/form-data" asp-controller="Travellers" asp-action="Create" method="post" class="mt-3">
+    <div class="modal-header">
+        <h5 class="modal-title" id="travellerModalLabel">Add new traveller</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body" style="border:2px solid black; background-color:antiquewhite">
+        <div class="form-group" >
+            Traveller Name:
+            <input asp-for="Name" class="form-control" placeholder="Traveller Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div id="0">
+            <hr />
+                <div class="form-group">
+                    Food Name :
+                    <input asp-for="Orders[0].Name" class="form-control" placeholder="Food Name" />
+                    <span asp-validation-for="Orders[0].Name" class="text-danger"></span>
+
+                </div>
+                <div class="form-group">
+                    Description :
+                    <input asp-for="Orders[0].Description" class="form-control" />
+                    <span asp-validation-for="Orders[0].Description" class="text-danger"></span>
+
+                </div>
+            <div class="form-group row">
+                <div class="col-md-12">
+                    Food Image :
+
+                    <img id="_0" src="" width="300" data-tag="orderImageinTraveller" />
+                    <input id="Image" name="Image" type="file" data-tag="_0" onchange="changeImage(this, event)" />
+                    <span asp-validation-for="Orders[0].Image" class="text-danger"></span>
+                </div>
+
+            </div>
+            <br />
+            <div class="row">
+                <div class="form-group col-md-6">
+                    Buying Date :
+                    <input asp-for="Orders[0].BuyingDate" class="form-control" />
+                    <span asp-validation-for="Orders[0].BuyingDate" class="text-danger"></span>
+                </div>
+
+                <div class="form-group col-md-6">
+                    Quantity :
+                    <input asp-for="Orders[0].Quantity" class="form-control" />
+                    <span asp-validation-for="Orders[0].Quantity" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="col-md-12">
+            <button id="addModelButton" type="button" class="btn btn-dark btn-block">Add more product</button>
+        </div>
+        <input id="sl" type="hidden" value="0" />
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <input type="submit" class="btn btn-primary" value="Save" />
+    </div>
+</form>
+
+
+
+
